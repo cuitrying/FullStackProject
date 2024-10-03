@@ -1,38 +1,41 @@
 ```mermaid
 
 sequenceDiagram
-    participant browser
-    participant server
+    participant User
+    participant Browser
+    participant Server
 
-    browser->>server: GET /exampleapp/notes
-    activate server
-    server-->>browser: HTML document
-    deactivate server
+    User->>Browser: Types a note and clicks "Save"
+    Note right of Browser: The browser collects the form data and prepares a POST request
+    Browser->>Server: POST https://studies.cs.helsinki.fi/exampleapp/new_note with note content
+    activate Server
+    Server-->>Browser: Redirect to /exampleapp/notes
+    deactivate Server
 
-    browser->>server: GET /exampleapp/main.css
-    activate server
-    server-->>browser: CSS file
-    deactivate server
+    Note right of Browser: The browser loads the updated notes page
 
-    browser->>server: GET /exampleapp/main.js
-    activate server
-    server-->>browser: JavaScript file
-    deactivate server
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    activate Server
+    Server-->>Browser: HTML document
+    deactivate Server
 
-    Note right of browser: JavaScript starts executing to load notes
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
+    activate Server
+    Server-->>Browser: CSS file
+    deactivate Server
 
-    browser->>server: GET /exampleapp/data.json
-    activate server
-    server-->>browser: JSON data with notes
-    deactivate server
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    activate Server
+    Server-->>Browser: JavaScript file
+    deactivate Server
 
-    Note right of browser: Browser dynamically renders notes on the page
+    Note right of Browser: The JavaScript code fetches the updated list of notes
 
-    browser->>server: POST /exampleapp/new_note with form data
-    activate server
-    server-->>browser: HTTP 302 Redirect to /exampleapp/notes
-    deactivate server
+    Browser->>Server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
+    activate Server
+    Server-->>Browser: [{ "content": "ABC", "date": "2023-1-1" }, ... , {"content": "New note", "date": "2024-10-03"}]
+    deactivate Server
 
-    Note right of browser: Browser reloads the page to fetch updated notes
+    Note right of Browser: The browser executes the callback function to render the updated notes
 
 ```

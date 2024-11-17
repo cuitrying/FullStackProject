@@ -21,8 +21,8 @@ const Statistics = ({ good, neutral, bad, total, average, positivePercentage }) 
           <StatisticLine text="Neutral" value={neutral} />
           <StatisticLine text="Bad" value={bad} />
           <StatisticLine text="Total" value={total} />
-          <StatisticLine text="Average" value={average.toFixed(4)} />
-          <StatisticLine text="Positive" value={`${positivePercentage.toFixed(4)}%`} />
+          <StatisticLine text="Average" value={average.toFixed(2)} />
+          <StatisticLine text="Positive" value={`${positivePercentage.toFixed(2)}%`} />
         </tbody>
       </table>
     </div>

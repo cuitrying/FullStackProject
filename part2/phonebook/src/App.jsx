@@ -8,6 +8,9 @@ const App = () => {
  const [newName, setNewName] = useState('')
  const [newNumber, setNewNumber] = useState('')
  const [searchTerm, setSearchTerm] = useState('')
+
+ const [message, setMessage] = useState(null)
+ const [messageType, setMessageType] = useState(null)
   useEffect(() => {
    personService
      .getAll()
@@ -15,6 +18,16 @@ const App = () => {
        setPersons(initialPersons)
      })
  }, [])
+
+ const showNotification = (message, messageType) => {
+  setMessage(message)
+  setMessageType(messageType)
+  setTimeout(() => {
+    setMessage(null)
+    setMessageType(null)
+  }, 5000)
+ }
+
   const addPerson = (event) => {
    event.preventDefault()
    
@@ -32,6 +45,14 @@ const App = () => {
            ))
            setNewName('')
            setNewNumber('')
+           showNotification(`Updated ${returnedPerson.name}'s number`, 'success')
+         })
+         .catch(error => {
+           showNotification(
+             `Information of ${existingPerson.name} has already been removed from server`,
+             'error'
+           )
+           setPersons(persons.filter(p => p.id !== existingPerson.id))
          })
      }
      return
@@ -46,6 +67,10 @@ const App = () => {
        setPersons(persons.concat(returnedPerson))
        setNewName('')
        setNewNumber('')
+       showNotification(`Added ${returnedPerson.name}`, 'success')
+     })
+     .catch(error => {
+       showNotification('Failed to add person', 'error')
      })
  }
   const deletePerson = (id, name) => {
@@ -54,6 +79,14 @@ const App = () => {
        .remove(id)
        .then(() => {
          setPersons(persons.filter(person => person.id !== id))
+         showNotification(`Deleted ${name}`, 'success')
+       })
+       .catch(error => {
+         showNotification(
+           `Information of ${name} has already been removed from server`,
+           'error'
+         )
+         setPersons(persons.filter(p => p.id !== id))
        })
    }
  }
@@ -72,6 +105,12 @@ const App = () => {
   return (
    <div>
      <h2>Phonebook</h2>
+
+     {message && (
+     <div className={`notification ${messageType}`}>
+      {message}
+      </div>
+     )}
      
      <Filter 
        searchTerm={searchTerm} 

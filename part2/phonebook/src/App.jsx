@@ -49,7 +49,7 @@ const App = () => {
          })
          .catch(error => {
            showNotification(
-             `Information of ${existingPerson.name} has already been removed from server`,
+             error.response?.data?.error || `Failed to update ${existingPerson.name}'s information`,
              'error'
            )
            setPersons(persons.filter(p => p.id !== existingPerson.id))
@@ -70,7 +70,10 @@ const App = () => {
        showNotification(`Added ${returnedPerson.name}`, 'success')
      })
      .catch(error => {
-       showNotification('Failed to add person', 'error')
+       showNotification(
+         error.response?.data?.error || 'Failed to add person - please try again',
+         'error'
+       )
      })
  }
   const deletePerson = (id, name) => {
